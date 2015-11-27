@@ -2,10 +2,12 @@
 autocomplete_ninja.jquery_ui = {
 
     _convert: function(data, value_lookup)  {
-        var pluck = autocomplete_ninja._create_plucker(value_lookup);
-        for (var i = 0; i < data.length; i++) {
-            data[i].label = data[i].name;
-            data[i].value = pluck(data[i]);
+        if (value_lookup) {
+            var pluck = autocomplete_ninja._create_plucker(value_lookup);
+            for (var i = 0; i < data.length; i++) {
+                data[i].label = data[i].name;
+                data[i].value = pluck(data[i]);
+            }
         }
         return data
     },
@@ -30,15 +32,27 @@ autocomplete_ninja.jquery_ui = {
     },
 
     countries: function() {
-        return this._get_config('countries/', {}, 'codes.iso');
+        return this._get_config('countries/', {}, 'name');
     },
 
     regions: function(country) {
-        return this._get_config('regions/', {country: country}, 'code');
+        return this._get_config('regions/', {country: country}, 'name');
     },
 
     cities: function(country, region) {
         return this._get_config('cities/', {country: country, region: region}, 'name');
-    }
+    },
+
+    emails: function(country) {
+        var extra_params = {};
+        if (country) extra_params.country = country;
+        return this._get_config('emails/', extra_params, null);
+    },
+
+    timezones: function(country) {
+        var extra_params = {};
+        if (country) extra_params.country = country;
+        return this._get_config('timezones/', extra_params, 'name');
+    }    
 
 }
